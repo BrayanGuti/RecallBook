@@ -14,7 +14,7 @@ export default function Home() {
       </header>
 
       <section className="flex min-h-[calc(100svh-88px)] flex-col items-center px-4 pb-32 pt-6">
-        <div className="flex w-full max-w-md flex-1 flex-col items-center">
+        <div className="flex w-full max-w-md flex-1 flex-col items-center gap-10">
           <div
             className="h-[45svh] min-h-[260px] w-full rounded-2xl bg-cover bg-center bg-no-repeat shadow-sm"
             style={{ backgroundImage: `url(${UNSPLASH_BOOK_IMAGE})` }}
@@ -31,7 +31,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-20">
+      <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-10">
         <div className="mx-auto max-w-md">
           <Button
             size="lg"

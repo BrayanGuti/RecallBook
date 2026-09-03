@@ -3,14 +3,17 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   // metadataBase: new URL("https://recallbook.app"),
-  title: "RecallBook — Recuerda lo que lees",
+  title: "RecallBook",
   description:
     "Convierte las ideas clave de tus libros favoritos en sesiones cortas e interactivas de Active Recall.",
+  icons: {
+    icon: "/book-page-icon.png",
+  },
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "RecallBook — Recuerda lo que lees",
+    title: "RecallBook",
     description:
       "Convierte las ideas clave de tus libros favoritos en sesiones cortas e interactivas de Active Recall.",
     type: "website",
@@ -26,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "RecallBook — Recuerda lo que lees",
+    title: "RecallBook",
     description:
       "Convierte las ideas clave de tus libros favoritos en sesiones cortas e interactivas de Active Recall.",
     images: ["/og-image.png"],

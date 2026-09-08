@@ -211,95 +211,91 @@ export function CardTypeB({ card, onCanAdvanceChange }: CardTypeBProps) {
             );
           })}
         </div>
+      </div>
 
-        <div className="relative mt-auto min-h-[132px] pt-5">
-          <div className="absolute inset-x-0 bottom-0 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 overflow-hidden rounded-b-[26px]">
-            <AnimatePresence mode="wait">
-              {!hasAnswered ? (
-                <motion.div
-                  key="hint"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="
-                    flex
-                    h-[132px]
-                    flex-col
-                    items-center
-                    justify-end
-                    gap-3
-                    px-5
-                    pb-5
-                  "
-                >
-                  <div className="h-px w-12 bg-sky-100" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden rounded-b-[28px]">
+        <AnimatePresence mode="wait">
+          {!hasAnswered ? (
+            <motion.div
+              key="hint"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="
+                flex
+                flex-col
+                items-center
+                justify-end
+                gap-3
+                px-5
+                pb-5
+                pt-10
+              "
+            >
+              <div className="h-px w-12 bg-sky-100" />
 
-                  <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                    <span>Selecciona una opción para continuar</span>
-                    <span>→</span>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="feedback"
-                  // Antes entraba desde arriba (y: -100 → 0, exit y: -30).
-                  // Ahora entra desde abajo, como una hoja que sube desde
-                  // el borde inferior de la card.
-                  initial={{
-                    opacity: 0,
-                    y: 100,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: 30,
-                  }}
-                  transition={{
-                    duration: 0.4,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
+                <span>Selecciona una opción para continuar</span>
+                <span>→</span>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="feedback"
+              initial={{
+                opacity: 0,
+                y: 40,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: 30,
+              }}
+              transition={{
+                duration: 0.4,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className={`
+                pointer-events-auto
+                border-t-2
+                px-5
+                py-4
+                shadow-[0_-8px_24px_rgba(0,0,0,0.08)]
+                ${
+                  wasCorrect
+                    ? `
+                      border-emerald-300
+                      bg-emerald-100
+                    `
+                    : `
+                      border-rose-300
+                      bg-rose-100
+                    `
+                }
+              `}
+            >
+              <div>
+                <p
                   className={`
-                    border-x-2
-                    border-t-2
-                    px-5
-                    py-4
-                    ${
-                      wasCorrect
-                        ? `
-                          border-emerald-300
-                          bg-emerald-100
-                        `
-                        : `
-                          border-rose-300
-                          bg-rose-100
-                        `
-                    }
+                    mb-1
+                    text-base
+                    font-semibold
+                    ${wasCorrect ? "text-emerald-800" : "text-rose-800"}
                   `}
                 >
-                  <div>
-                    <p
-                      className={`
-                        mb-1
-                        text-base
-                        font-semibold
-                        ${wasCorrect ? "text-emerald-800" : "text-rose-800"}
-                      `}
-                    >
-                      {wasCorrect ? "¡Correcto!" : "No exactamente"}
-                    </p>
+                  {wasCorrect ? "¡Correcto!" : "No exactamente"}
+                </p>
 
-                    <p className="text-sm font-medium leading-relaxed text-slate-600">
-                      {card.explanation}
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
+                <p className="text-sm font-medium leading-relaxed text-slate-600">
+                  {card.explanation}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

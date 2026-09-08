@@ -111,13 +111,12 @@ Este documento **no explica cómo implementar** (eso vive en `AGENTE_IMPLEMENTAC
 - Si la opción es correcta: se ve en verde pastel + microinteracción + explicación.
 - Si es incorrecta: la opción elegida se ve en rojo pastel, la correcta se resalta en verde, y se muestra la explicación.
 - En ambos casos el usuario puede seguir avanzando (fallar no bloquea el mazo).
-- El feedback no depende solo del color (RNF de accesibilidad / Sección 21): debe haber un ícono o texto adicional, no solo el borde de color.
+- no se puede avanzar de pregunta si no se a seleccionado una respuesta
 
 **Cómo verificar:**
 
 1. Responder cada pregunta del mazo una vez bien y, recargando, una vez mal.
 2. Confirmar que en ambos casos se puede seguir avanzando.
-3. Ver la pantalla en escala de grises (herramienta de simulación de daltonismo del navegador) y confirmar que sigue siendo claro cuál respuesta era correcta.
 
 ---
 

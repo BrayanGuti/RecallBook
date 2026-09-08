@@ -13,8 +13,7 @@ export const atomicHabitsDeck: Deck = {
       front:
         "¿Por qué tener metas demasiado altas puede ser la razón directa de tu fracaso?",
       back: {
-        concept:
-          "No caes al nivel de tus metas — caes al nivel de tus sistemas.",
+        concept: "No caes al nivel de tus metas caes al nivel de tus sistemas.",
         application:
           "Los ganadores y perdedores tienen exactamente las mismas metas. Fijarte un objetivo no cambia nada si no cambias el proceso diario que te lleva hasta ahí.",
       },

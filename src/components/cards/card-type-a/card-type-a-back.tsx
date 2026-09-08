@@ -13,9 +13,8 @@ export function CardTypeABack({ card }: CardTypeABackProps) {
         overflow-hidden
         rounded-[28px]
         border border-[#8f8f8f]
-        bg-[#f9f9f9]
         p-6 sm:p-8
-        shadow-[0_12px_40px_rgba(90,169,230,0.10)]
+        shadow-[0_12px_40px_rgba(90,169,230,0.15)]
       "
       style={{
         backfaceVisibility: "hidden",
@@ -23,8 +22,10 @@ export function CardTypeABack({ card }: CardTypeABackProps) {
         transform: "rotateY(180deg)",
       }}
     >
+      {/* Círculo decorativo de fondo con brillo suave */}
+
       {/* Contenido */}
-      <div className="my-auto flex flex-1 flex-col items-center justify-center py-8">
+      <div className="relative z-10 my-auto flex flex-1 flex-col items-center justify-center">
         <p
           className="
             max-w-[34rem]
@@ -40,7 +41,7 @@ export function CardTypeABack({ card }: CardTypeABackProps) {
           {card.back.concept}
         </p>
 
-        <div className="my-6 h-px w-12 bg-indigo-100" />
+        <div className="my-4 h-px w-12 bg-indigo-200" />
 
         <p
           className="
@@ -57,13 +58,14 @@ export function CardTypeABack({ card }: CardTypeABackProps) {
       </div>
 
       {/* CTA inferior */}
-      <div className="flex flex-col items-center gap-3">
+      <div className="relative z-10 flex flex-col items-center gap-3">
         <div className="h-px w-12 bg-indigo-100" />
 
-        <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
+        <div className="flex items-center gap-2 text-sm font-medium text-[#f98e47]">
           <span>Toca para volver a la pregunta</span>
-
-          <span className="inline-flex">↶</span>
+          <span className="inline-flex transition-transform hover:-translate-x-0.5">
+            ↶
+          </span>
         </div>
       </div>
     </div>

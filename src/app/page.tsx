@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-
 const UNSPLASH_BOOK_IMAGE = "relaxed-person-sitting-comfortably-in-a-s.png";
 
 export default function Home() {
@@ -33,12 +31,12 @@ export default function Home() {
 
       <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-10">
         <div className="mx-auto max-w-md">
-          <Button
-            size="lg"
+          <a
+            href="/demo"
             className="
-              mx-auto 
-               max-w-md
+              flex
               h-14 w-full
+              items-center justify-center
               rounded-xl
               border-x-0 border-t-0 border-b-[6px]
               border-[#dc6725]
@@ -46,14 +44,15 @@ export default function Home() {
               px-6
               text-base font-bold text-white
               shadow-none
+              transition-all
               hover:bg-[#dc6725]
               active:translate-y-1
               active:border-b-0
               active:mb-[6px]
             "
           >
-            <a href="/demo">Empezar mazo</a>
-          </Button>
+            Empezar mazo
+          </a>
         </div>
       </div>
     </main>

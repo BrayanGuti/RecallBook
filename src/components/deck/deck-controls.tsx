@@ -13,7 +13,7 @@ export function DeckControls() {
   if (isCompleted) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 w-full px-4 pb-5 pt-3">
+    <div className="fixed inset-x-0 bottom-0 z-50 w-full px-4 pb-10">
       <div className="mx-auto flex w-full max-w-md items-center gap-3">
         {/* Anterior */}
         <div className="w-1/2">

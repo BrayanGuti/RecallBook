@@ -25,7 +25,7 @@ export const useDeckStore = create<DeckState>((set, get) => ({
   deck: atomicHabitsDeck,
   currentIndex: 0,
   isCompleted: false,
-  canAdvance: true,
+  canAdvance: false,
   pendingExit: null,
 
   nextCard: () => {

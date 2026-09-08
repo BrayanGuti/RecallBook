@@ -1,8 +1,24 @@
 import { create } from "zustand";
-import { Deck } from "@/types/deck";
+import { Deck, Card } from "@/types/deck";
 import { atomicHabitsDeck } from "@/data/atomic-habits";
 
 export type SwipeDirection = "left" | "right";
+
+function shuffleCards(cards: Card[]): Card[] {
+  const shuffled = [...cards];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function createShuffledDeck(sourceDeck: Deck): Deck {
+  return {
+    ...sourceDeck,
+    cards: shuffleCards(sourceDeck.cards),
+  };
+}
 
 interface DeckState {
   deck: Deck;
@@ -19,6 +35,7 @@ interface DeckState {
   setCanAdvance: (canAdvance: boolean) => void;
   requestExit: (direction: SwipeDirection) => void;
   clearPendingExit: () => void;
+  shuffleDeck: () => void;
 }
 
 export const useDeckStore = create<DeckState>((set, get) => ({
@@ -52,12 +69,13 @@ export const useDeckStore = create<DeckState>((set, get) => ({
   },
 
   resetDeck: () =>
-    set({
+    set((state) => ({
+      deck: createShuffledDeck(state.deck),
       currentIndex: 0,
       isCompleted: false,
       canAdvance: true,
       pendingExit: null,
-    }),
+    })),
 
   setCanAdvance: (canAdvance) => set({ canAdvance }),
 
@@ -70,4 +88,9 @@ export const useDeckStore = create<DeckState>((set, get) => ({
   },
 
   clearPendingExit: () => set({ pendingExit: null }),
+
+  shuffleDeck: () =>
+    set((state) => ({
+      deck: createShuffledDeck(state.deck),
+    })),
 }));

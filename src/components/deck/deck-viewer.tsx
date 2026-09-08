@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useDeckStore } from "@/stores/deck-store";
 import { SwipeableCard } from "./swipeable-card";
 import { DeckCompletedScreen } from "./deck-completed-screen";
@@ -14,7 +15,17 @@ export function DeckViewer() {
     setCanAdvance,
     nextCard,
     prevCard,
+    shuffleDeck,
   } = useDeckStore();
+
+  const hasShuffledRef = useRef(false);
+
+  useEffect(() => {
+    if (hasShuffledRef.current) return;
+    hasShuffledRef.current = true;
+    shuffleDeck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isCompleted) {
     return <DeckCompletedScreen />;

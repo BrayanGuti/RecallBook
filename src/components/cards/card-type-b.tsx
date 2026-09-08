@@ -21,14 +21,28 @@ function getOptionState(
   option: CardOption,
   selectedOptionId: string | null,
 ): OptionVisualState {
-  if (selectedOptionId === null) return "idle";
+  if (selectedOptionId === null) {
+    return "idle";
+  }
 
   const isSelected = option.id === selectedOptionId;
 
-  if (isSelected && option.isCorrect) return "correct-selected";
-  if (isSelected && !option.isCorrect) return "incorrect-selected";
-  if (!isSelected && option.isCorrect) return "correct-unselected";
+  // La respuesta seleccionada es correcta
+  if (isSelected && option.isCorrect) {
+    return "correct-selected";
+  }
 
+  // La respuesta seleccionada es incorrecta
+  if (isSelected && !option.isCorrect) {
+    return "incorrect-selected";
+  }
+
+  // Mostrar también cuál era la correcta
+  if (!isSelected && option.isCorrect) {
+    return "correct-unselected";
+  }
+
+  // Las demás pierden protagonismo
   return "faded";
 }
 
@@ -44,14 +58,17 @@ const OPTION_STYLES: Record<OptionVisualState, string> = {
     active:shadow-[0_1px_0_0_#d4d4d4]
   `,
 
+  // Misma estructura de borde que idle.
+  // Solo cambia el color.
   "correct-selected": `
     border-emerald-500
     bg-emerald-50
     text-emerald-900
     shadow-[0_3px_0_0_#10b981]
-    animate-answer-pulse
   `,
 
+  // Misma estructura de borde que idle.
+  // Solo cambia el color.
   "incorrect-selected": `
     border-rose-500
     bg-rose-50
@@ -59,6 +76,7 @@ const OPTION_STYLES: Record<OptionVisualState, string> = {
     shadow-[0_3px_0_0_#f43f5e]
   `,
 
+  // La correcta también se revela aunque no haya sido seleccionada.
   "correct-unselected": `
     border-emerald-500
     bg-emerald-50
@@ -189,144 +207,79 @@ export function CardTypeB({ card, onCanAdvanceChange }: CardTypeBProps) {
                 `}
               >
                 <span className="flex-1">{option.text}</span>
-
-                {/* Correcta */}
-                {hasAnswered &&
-                  (state === "correct-selected" ||
-                    state === "correct-unselected") && (
-                    <span
-                      className="
-                        ml-3
-                        flex
-                        h-7
-                        w-7
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-emerald-500
-                        text-sm
-                        font-bold
-                        text-white
-                      "
-                    >
-                      ✓
-                    </span>
-                  )}
-
-                {/* Incorrecta */}
-                {hasAnswered && state === "incorrect-selected" && (
-                  <span
-                    className="
-                        ml-3
-                        flex
-                        h-7
-                        w-7
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-rose-500
-                        text-sm
-                        font-bold
-                        text-white
-                      "
-                  >
-                    ×
-                  </span>
-                )}
               </motion.button>
             );
           })}
         </div>
 
-        {/* Área reservada para feedback */}
         <div className="relative mt-auto min-h-[132px] pt-5">
-          <AnimatePresence mode="wait">
-            {!hasAnswered ? (
-              <motion.div
-                key="hint"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="
-                  flex
-                  h-full
-                  flex-col
-                  items-center
-                  justify-end
-                  gap-3
-                "
-              >
-                <div className="h-px w-12 bg-sky-100" />
+          <div className="absolute inset-x-0 bottom-0 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 overflow-hidden rounded-b-[26px]">
+            <AnimatePresence mode="wait">
+              {!hasAnswered ? (
+                <motion.div
+                  key="hint"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="
+                    flex
+                    h-[132px]
+                    flex-col
+                    items-center
+                    justify-end
+                    gap-3
+                    px-5
+                    pb-5
+                  "
+                >
+                  <div className="h-px w-12 bg-sky-100" />
 
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
-                  <span>Selecciona una opción para continuar</span>
-                  <span>→</span>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="feedback"
-                initial={{
-                  opacity: 0,
-                  y: 70,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  y: 30,
-                }}
-                transition={{
-                  duration: 0.35,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className={`
-                  absolute
-                  inset-x-0
-                  bottom-0
-                  rounded-2xl
-                  border-2
-                  px-4
-                  py-4
-                  ${
-                    wasCorrect
-                      ? `
-                        border-emerald-300
-                        bg-emerald-100
-                      `
-                      : `
-                        border-rose-300
-                        bg-rose-100
-                      `
-                  }
-                `}
-              >
-                <div className="flex items-start gap-3">
-                  {/* Icono */}
-                  <div
-                    className={`
-                      flex
-                      h-8
-                      w-8
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-full
-                      text-base
-                      font-bold
-                      text-white
-                      ${wasCorrect ? "bg-emerald-500" : "bg-rose-500"}
-                    `}
-                  >
-                    {wasCorrect ? "✓" : "×"}
+                  <div className="flex items-center gap-2 text-sm font-medium text-slate-400">
+                    <span>Selecciona una opción para continuar</span>
+                    <span>→</span>
                   </div>
-
-                  {/* Texto */}
-                  <div className="min-w-0">
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="feedback"
+                  // Antes entraba desde arriba (y: -100 → 0, exit y: -30).
+                  // Ahora entra desde abajo, como una hoja que sube desde
+                  // el borde inferior de la card.
+                  initial={{
+                    opacity: 0,
+                    y: 100,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 30,
+                  }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className={`
+                    border-x-2
+                    border-t-2
+                    px-5
+                    py-4
+                    ${
+                      wasCorrect
+                        ? `
+                          border-emerald-300
+                          bg-emerald-100
+                        `
+                        : `
+                          border-rose-300
+                          bg-rose-100
+                        `
+                    }
+                  `}
+                >
+                  <div>
                     <p
                       className={`
                         mb-1
@@ -342,10 +295,10 @@ export function CardTypeB({ card, onCanAdvanceChange }: CardTypeBProps) {
                       {card.explanation}
                     </p>
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

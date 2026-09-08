@@ -1,8 +1,8 @@
 "use client";
 
 import { Card } from "@/types/deck";
-import { CardTypeA } from "./card-type-a";
 import { CardTypeB } from "./card-type-b";
+import { CardTypeA } from "./card-type-a/card-type-a";
 
 interface CardRendererProps {
   card: Card;

@@ -4,7 +4,7 @@ import { DeckControls } from "@/components/deck/deck-controls";
 
 export default function DemoPage() {
   return (
-    <main className="fixed inset-0 overflow-hidden bg-gray-50">
+    <main className="fixed inset-0 overflow-hidden bg-[#f9f9f9]">
       <DeckProgress />
 
       <div className="h-full w-full px-4 pt-24 pb-28">

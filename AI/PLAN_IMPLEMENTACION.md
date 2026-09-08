@@ -93,6 +93,7 @@ Este documento **no explica cómo implementar** (eso vive en `AGENTE_IMPLEMENTAC
 - Al hacer tap/clic en una tarjeta Tipo A, se voltea con una animación (no un cambio brusco).
 - El reverso muestra la enseñanza central, distinta del hook del frente.
 - Se puede volver a ver el frente (o al menos avanzar sin quedar atascado).
+- no se puede avanazr sin ver el reverso
 
 **Cómo verificar:**
 

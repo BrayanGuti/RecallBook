@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, TouchEvent, MouseEvent, ReactNode } from "react";
+import { useState, useRef, PointerEvent, ReactNode } from "react";
 
 const SWIPE_THRESHOLD = 100;
 const FLY_OUT_DURATION = 300;
@@ -31,16 +31,17 @@ export function SwipeableCard({
   const cardRef = useRef<HTMLDivElement | null>(null);
   const wasDraggedRef = useRef(false);
 
-  const onTouchStart = (e: TouchEvent) => {
+  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (isSettling) return;
-    startXRef.current = e.targetTouches[0].clientX;
+    startXRef.current = e.clientX;
     containerWidthRef.current = cardRef.current?.offsetWidth ?? 320;
     setIsDragging(true);
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
-  const onTouchMove = (e: TouchEvent) => {
-    if (startXRef.current === null) return;
-    const currentX = e.targetTouches[0].clientX;
+  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (!isDragging || startXRef.current === null) return;
+    const currentX = e.clientX;
     let delta = currentX - startXRef.current;
 
     if (delta < 0 && !canSwipeLeft) delta = delta / 3;
@@ -49,7 +50,8 @@ export function SwipeableCard({
     setDragX(delta);
   };
 
-  const onTouchEnd = () => {
+  const handleDragEnd = () => {
+    if (!isDragging) return;
     setIsDragging(false);
     const finalDelta = dragX;
     startXRef.current = null;
@@ -80,7 +82,7 @@ export function SwipeableCard({
     }
   };
 
-  const onClickCapture = (e: MouseEvent) => {
+  const onClickCapture = (e: React.MouseEvent) => {
     if (wasDraggedRef.current) {
       e.stopPropagation();
       e.preventDefault();
@@ -100,9 +102,10 @@ export function SwipeableCard({
   return (
     <div
       ref={cardRef}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={handleDragEnd}
+      onPointerCancel={handleDragEnd}
       onClickCapture={onClickCapture}
       className="w-full max-w-md mx-auto select-none"
       style={{ touchAction: "none" }}

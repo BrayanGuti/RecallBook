@@ -12,9 +12,17 @@ export function DeckControls() {
 
   if (isCompleted) return null;
 
+  const buttonFontSize = "calc(var(--controls-btn-h) * 0.2857)";
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 w-full px-4 pb-10">
-      <div className="mx-auto flex w-full max-w-md items-center gap-3">
+    <div
+      className="fixed inset-x-0 bottom-0 z-50 w-full px-4"
+      style={{ paddingBottom: "var(--controls-pb)" }}
+    >
+      <div
+        className="mx-auto flex w-full max-w-md items-center"
+        style={{ gap: "calc(var(--controls-btn-h) * 0.214)" }}
+      >
         {/* Anterior */}
         <div className="w-1/2">
           {!isFirstCard && (
@@ -22,14 +30,12 @@ export function DeckControls() {
               variant="outline"
               onClick={() => requestExit("right")}
               className="
-                h-14
                 w-full
                 rounded-2xl
                 border-2
                 border-slate-300
                 bg-slate-100
                 px-4
-                text-base
                 font-bold
                 text-slate-600
                 shadow-[0_4px_0_0_rgb(148,163,184)]
@@ -40,8 +46,17 @@ export function DeckControls() {
                 active:translate-y-[3px]
                 active:shadow-[0_1px_0_0_rgb(148,163,184)]
               "
+              style={{
+                height: "var(--controls-btn-h)",
+                fontSize: buttonFontSize,
+              }}
             >
-              <span className="mr-1 text-lg leading-none">←</span>
+              <span
+                className="mr-1 leading-none"
+                style={{ fontSize: "1.125em" }}
+              >
+                ←
+              </span>
               Anterior
             </Button>
           )}
@@ -53,12 +68,10 @@ export function DeckControls() {
             onClick={() => requestExit("left")}
             disabled={!canAdvance}
             className={`
-              h-14
               w-full
               rounded-2xl
               border-2
               px-5
-              text-base
               font-bold
               transition-all
               duration-100
@@ -84,11 +97,20 @@ export function DeckControls() {
                   `
               }
             `}
+            style={{
+              height: "var(--controls-btn-h)",
+              fontSize: buttonFontSize,
+            }}
           >
             {isLastCard ? "Finalizar" : "Siguiente"}
 
             {!isLastCard && (
-              <span className="ml-1 text-lg leading-none">→</span>
+              <span
+                className="ml-1 leading-none"
+                style={{ fontSize: "1.125em" }}
+              >
+                →
+              </span>
             )}
           </Button>
         </div>

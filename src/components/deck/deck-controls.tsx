@@ -4,7 +4,7 @@ import { useDeckStore } from "@/stores/deck-store";
 import { Button } from "@/components/ui/button";
 
 export function DeckControls() {
-  const { currentIndex, deck, isCompleted, canAdvance, nextCard, prevCard } =
+  const { currentIndex, deck, isCompleted, canAdvance, requestExit } =
     useDeckStore();
 
   const isFirstCard = currentIndex === 0;
@@ -16,7 +16,7 @@ export function DeckControls() {
       <div className="flex w-full max-w-md mx-auto items-center gap-4">
         <Button
           variant="outline"
-          onClick={prevCard}
+          onClick={() => requestExit("right")}
           disabled={isFirstCard}
           className="w-1/2 min-h-[48px] py-6 text-base font-semibold"
         >
@@ -24,7 +24,7 @@ export function DeckControls() {
         </Button>
 
         <Button
-          onClick={nextCard}
+          onClick={() => requestExit("left")}
           disabled={!canAdvance}
           className="w-1/2 min-h-[48px] py-6 text-base font-semibold"
         >

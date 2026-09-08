@@ -1,10 +1,24 @@
 "use client";
 
-import { useState, useRef, PointerEvent, ReactNode } from "react";
+import { useEffect, useRef, useState, PointerEvent, ReactNode } from "react";
+import { useDeckStore, SwipeDirection } from "@/stores/deck-store";
 
 const SWIPE_THRESHOLD = 100;
-const FLY_OUT_DURATION = 300;
 const DRAG_CLICK_SUPPRESS_THRESHOLD = 10;
+
+// Salida disparada por el gesto de swipe con el dedo: rápida, con
+// "overshoot" hacia afuera de la pantalla (simula inercia del drag).
+const DRAG_FLY_OUT_DURATION = 300;
+const DRAG_FLY_OUT_DISTANCE_MULTIPLIER = 1.5;
+const DRAG_FLY_OUT_DISTANCE_EXTRA = 100;
+const DRAG_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
+
+// Salida disparada por un trigger externo (botones Siguiente/Anterior):
+// no hay gesto físico detrás, así que se siente mejor más lenta, suave,
+// y sin necesidad de viajar tan lejos —solo lo justo para salir del marco.
+const EXTERNAL_FLY_OUT_DURATION = 450;
+const EXTERNAL_FLY_OUT_DISTANCE_MULTIPLIER = 1.05;
+const EXTERNAL_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 
 interface SwipeableCardProps {
   children: ReactNode;
@@ -26,10 +40,80 @@ export function SwipeableCard({
   const [isSettling, setIsSettling] = useState(false);
   const [isReturning, setIsReturning] = useState(false);
 
+  const [transitionMs, setTransitionMs] = useState(DRAG_FLY_OUT_DURATION);
+  const [transitionEasing, setTransitionEasing] = useState(DRAG_EASING);
+
   const startXRef = useRef<number | null>(null);
   const containerWidthRef = useRef(320);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const wasDraggedRef = useRef(false);
+
+  const canSwipeLeftRef = useRef(canSwipeLeft);
+  const canSwipeRightRef = useRef(canSwipeRight);
+  const isSettlingRef = useRef(isSettling);
+  const onSwipeLeftRef = useRef(onSwipeLeft);
+  const onSwipeRightRef = useRef(onSwipeRight);
+
+  useEffect(() => {
+    canSwipeLeftRef.current = canSwipeLeft;
+    canSwipeRightRef.current = canSwipeRight;
+    isSettlingRef.current = isSettling;
+    onSwipeLeftRef.current = onSwipeLeft;
+    onSwipeRightRef.current = onSwipeRight;
+  });
+
+  useEffect(() => {
+    containerWidthRef.current = cardRef.current?.offsetWidth ?? 320;
+  }, []);
+
+  const triggerExit = (
+    direction: SwipeDirection,
+    source: "drag" | "external" = "drag",
+  ) => {
+    if (isSettlingRef.current) return;
+    if (direction === "left" && !canSwipeLeftRef.current) return;
+    if (direction === "right" && !canSwipeRightRef.current) return;
+
+    const isExternal = source === "external";
+    const duration = isExternal
+      ? EXTERNAL_FLY_OUT_DURATION
+      : DRAG_FLY_OUT_DURATION;
+    const easing = isExternal ? EXTERNAL_EASING : DRAG_EASING;
+    const distanceMultiplier = isExternal
+      ? EXTERNAL_FLY_OUT_DISTANCE_MULTIPLIER
+      : DRAG_FLY_OUT_DISTANCE_MULTIPLIER;
+    const distanceExtra = isExternal ? 0 : DRAG_FLY_OUT_DISTANCE_EXTRA;
+
+    setTransitionMs(duration);
+    setTransitionEasing(easing);
+
+    setIsDragging(false);
+    startXRef.current = null;
+    setIsSettling(true);
+
+    const exitX =
+      (direction === "left" ? -1 : 1) *
+      (containerWidthRef.current * distanceMultiplier + distanceExtra);
+    setDragX(exitX);
+
+    window.setTimeout(() => {
+      if (direction === "left") {
+        onSwipeLeftRef.current();
+      } else {
+        onSwipeRightRef.current();
+      }
+    }, duration);
+  };
+
+  useEffect(() => {
+    const unsubscribe = useDeckStore.subscribe((state, prevState) => {
+      if (state.pendingExit && state.pendingExit !== prevState.pendingExit) {
+        useDeckStore.getState().clearPendingExit();
+        triggerExit(state.pendingExit, "external");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (isSettling) return;
@@ -63,18 +147,10 @@ export function SwipeableCard({
     const goRight = finalDelta >= SWIPE_THRESHOLD && canSwipeRight;
 
     if (goLeft || goRight) {
-      setIsSettling(true);
-      const exitX = (goLeft ? -1 : 1) * (containerWidthRef.current * 1.5 + 100);
-      setDragX(exitX);
-
-      window.setTimeout(() => {
-        if (goLeft) {
-          onSwipeLeft();
-        } else {
-          onSwipeRight();
-        }
-      }, FLY_OUT_DURATION);
+      triggerExit(goLeft ? "left" : "right", "drag");
     } else if (Math.abs(finalDelta) > 0) {
+      setTransitionMs(DRAG_FLY_OUT_DURATION);
+      setTransitionEasing(DRAG_EASING);
       setIsReturning(true);
       setDragX(0);
     } else {
@@ -118,7 +194,7 @@ export function SwipeableCard({
                 transform: `translateX(${dragX}px) rotate(${rotation}deg)`,
                 willChange: "transform",
                 transition: useTransition
-                  ? "transform 300ms cubic-bezier(0.22, 1, 0.36, 1)"
+                  ? `transform ${transitionMs}ms ${transitionEasing}`
                   : "none",
               }
             : undefined

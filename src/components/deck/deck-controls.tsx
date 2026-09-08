@@ -6,28 +6,31 @@ import { Button } from "@/components/ui/button";
 export function DeckControls() {
   const { currentIndex, deck, isCompleted, canAdvance, nextCard, prevCard } =
     useDeckStore();
+
   const isFirstCard = currentIndex === 0;
 
   if (isCompleted) return null;
 
   return (
-    <div className="flex items-center justify-between w-full max-w-md mx-auto mt-6 px-4 gap-4">
-      <Button
-        variant="outline"
-        onClick={prevCard}
-        disabled={isFirstCard}
-        className="w-1/2 py-6 text-base font-semibold min-h-[48px]"
-      >
-        ← Anterior
-      </Button>
+    <div className="fixed bottom-0 left-0 right-0 z-50 w-full px-4 pb-6">
+      <div className="flex w-full max-w-md mx-auto items-center gap-4">
+        <Button
+          variant="outline"
+          onClick={prevCard}
+          disabled={isFirstCard}
+          className="w-1/2 min-h-[48px] py-6 text-base font-semibold"
+        >
+          ← Anterior
+        </Button>
 
-      <Button
-        onClick={nextCard}
-        disabled={!canAdvance}
-        className="w-1/2 py-6 text-base font-semibold min-h-[48px]"
-      >
-        {currentIndex === deck.cards.length - 1 ? "Finalizar" : "Siguiente →"}
-      </Button>
+        <Button
+          onClick={nextCard}
+          disabled={!canAdvance}
+          className="w-1/2 min-h-[48px] py-6 text-base font-semibold"
+        >
+          {currentIndex === deck.cards.length - 1 ? "Finalizar" : "Siguiente →"}
+        </Button>
+      </div>
     </div>
   );
 }

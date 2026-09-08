@@ -4,12 +4,16 @@ import { DeckControls } from "@/components/deck/deck-controls";
 
 export default function DemoPage() {
   return (
-    <main className="fixed inset-0 overflow-hidden bg-gray-50 flex flex-col items-center justify-center py-8 px-4">
-      <div className="w-full max-w-md">
-        <DeckProgress />
-        <DeckViewer />
-        <DeckControls />
+    <main className="fixed inset-0 overflow-hidden bg-gray-50">
+      <DeckProgress />
+
+      <div className="h-full w-full px-4 pt-24 pb-28">
+        <div className="mx-auto flex h-full w-full max-w-md items-center justify-center">
+          <DeckViewer />
+        </div>
       </div>
+
+      <DeckControls />
     </main>
   );
 }

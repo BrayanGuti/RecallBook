@@ -183,11 +183,12 @@ export function SwipeableCard({
       onPointerUp={handleDragEnd}
       onPointerCancel={handleDragEnd}
       onClickCapture={onClickCapture}
-      className="w-full max-w-md mx-auto select-none"
+      className="w-full max-w-md mx-auto h-full min-h-0 select-none"
       style={{ touchAction: "none" }}
     >
       <div
         onTransitionEnd={handleTransitionEnd}
+        className="h-full min-h-0"
         style={
           isActive
             ? {

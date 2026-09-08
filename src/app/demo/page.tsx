@@ -8,7 +8,7 @@ export default function DemoPage() {
       <DeckProgress />
 
       <div className="h-full w-full px-4 pt-24 pb-28">
-        <div className="mx-auto flex h-full w-full max-w-md items-center justify-center">
+        <div className="mx-auto flex h-full w-full max-w-md min-h-0 justify-center">
           <DeckViewer />
         </div>
       </div>
